@@ -21,13 +21,13 @@
 - 动态代理
   -[动态代理原理](动态代理原理.md)
 
--RecyclerView
+- RecyclerView
   - [RecyclerView 源码解析](RecyclerView%20源码解析.md) 
 
--LeakCanary 
+- LeakCanary 
   - [LeakCanary 源码分析](LeakCanary%20源码分析.md) 
 
--集合
+- 集合
   - [HasMap源码分析](HasMap源码分析.md) 
   - [Hashtable 源码分析](Hashtable%20源码分析.md) 
   - [LinkedHashMap源码分析](LinkedHashMap源码分析.md) 
@@ -52,10 +52,10 @@
 - ARouter
   - [ARouter路由分析](ARouter路由分析.md)
 
--IdleHandler 
+- IdleHandler 
   - [IdleHandler 使用](IdleHandler%20使用.md)
 
--Glide
+- Glide
   - [Glide源码解析--Glide#with方法分析](Glide源码解析--Glide#with方法分析.md) 
   - [Glide源码分析--load 和 into 方法](Glide源码分析--load%20和%20into%20方法.md) 
   - [Glide源码分析--缓存机制](Glide源码分析--缓存机制.md) 
