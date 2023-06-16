@@ -18,8 +18,8 @@
   - [OkHttp 分析（二）](OKHttp%20分析（二）.md) 
   - [OkHttp 分析（三）](OKHttp%20分析（三）.md) 
 
-- 动态代理
-  -[动态代理原理](动态代理原理.md)
+- 动态代理  
+  - [动态代理原理](动态代理原理.md)
 
 - RecyclerView
   - [RecyclerView 源码解析](RecyclerView%20源码解析.md) 
@@ -66,7 +66,7 @@
   - [理解反射](理解反射.md)  
 
 - 理解 TCP/IP HTTP Socket
-  -[理解 TCP/IP HTTP Socket](理解%20TCP/IP%20HTTP%20Socket.md)
+  - [理解 TCP/IP HTTP Socket](理解%20TCP/IP%20HTTP%20Socket.md)
   
 - JVM(Java虚拟机)
-  -[JVM(Java虚拟机)](JVM(Java虚拟机).md)
+  - [JVM(Java虚拟机)](JVM(Java虚拟机).md)
