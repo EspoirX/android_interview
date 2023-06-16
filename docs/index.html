@@ -7,10 +7,6 @@
   <meta name="description" content="Description">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
-  
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css" title="light">
-  <link rel="stylesheet" href="assets/css/main-custom.css">
-  <link rel="stylesheet" href="assets/css/button-custom.css">
 </head>
 <body>
   <div id="app"></div>
@@ -35,9 +31,18 @@
         noData: '找不到结果',
         // 搜索标题的最大程级, 1 - 6
         depth: 3,
+      },
+      share: {
+          reddit: true,
+          linkedin: true,
+          facebook: true,
+          twitter: true,
+          whatsapp: true,
+          telegram: true,
       }
     }
   </script>
+  <script src="//unpkg.com/docsify-share/build/index.min.js"></script>
   <!-- Docsify v4 -->
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
 </body>
