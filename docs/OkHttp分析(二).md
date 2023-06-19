@@ -572,7 +572,7 @@ fun connect(
 - 如果请求是不安全的请求，会对请求执行一些额外的限制:
  
 
-      (1). ConnectionSpec 集合必须包含 ConnectionSpec.CLEARTEXT。也就是说 OkHttp 用户可以通过 OkHttpClient 设置不包含 ConnectionSpec.CLEARTEXT 的 ConnectionSpec 集合来禁用所有的明文要求。
+      (1). ConnectionSpec 集合必须包含 ConnectionSpec.CLEARTEXT。也就是说 OkHttp 用户可以通过 OkHttpClient 设置不包含 ConnectionSpec.CLEARTEXT 的 ConnectionSpec 集合来禁用所有的明文要求。  
       (2). 平台本身的安全策略允向相应的主机发送明文请求。对于Android平台而言，这种安全策略主要由系统的组件 android.security.NetworkSecurityPolicy 执行。平台的这种安全策略不是每个 Android 版本都有             的。Android6.0之后存在这种控制。(okhttp/okhttp/src/main/java/okhttp3/internal/platform/AndroidPlatform.java 里面的isCleartextTrafficPermitted()方法)
 
 - 根据请求判断是否需要建立隧道连接，如果建立隧道连接则调用 **connectTunnel**
@@ -869,7 +869,7 @@ synchronized(connectionPool) {
 
 参数 doExtensiveChecks 表示是否需要额外检查。
 
-- **socket 已经关闭 **或 **输入流关闭 **或** 输出流关闭** 则不健康
+- **socket 已经关闭** 或 **输入流关闭 **或** 输出流关闭** 则不健康
 - 如果是 HTTP/2 连接，如果 HTTP/2 连接关闭 则不健康
 - 如果要额外检查，则调用 socket 的 isHealthy 方法检查是否健康
 
