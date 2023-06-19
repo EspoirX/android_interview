@@ -1,9 +1,9 @@
-Glide 除了使用内存缓存还有磁盘缓存外，其实还有很多其他缓存，它的缓存结构是多级的。
+Glide 除了使用内存缓存还有磁盘缓存外，其实还有很多其他缓存，它的缓存结构是多级的。  
 其中，比较重要之一是对象池的使用。
 
-> **我们知道如果较短时间内频繁的新建对象是会造成内存的抖动，可能造成界面的卡顿。**
-> **对象池就是为了避免这种情况发生的一种常见设计模式。**
-> **它会初始化一系列的对象，当需要对象的时候不是去创建一个新的对象，而是去复用闲置的对象资源。**
+> **我们知道如果较短时间内频繁的新建对象是会造成内存的抖动，可能造成界面的卡顿。**  
+> **对象池就是为了避免这种情况发生的一种常见设计模式。**  
+> **它会初始化一系列的对象，当需要对象的时候不是去创建一个新的对象，而是去复用闲置的对象资源。**  
 > **当没有闲置资源的时候进行扩容。**
 
 
@@ -61,7 +61,7 @@ MemorySizeCalculator(MemorySizeCalculator.Builder builder) {
 }
 ```
 
-首先判断当前是否是低内存，判断的方法是调用 ActivityManager#isLowRamDevice 方法。然后算出 arryPoolSize，arrayPoolSizeBytes 的默认值是 4 * 1024 * 1024，即 4MB。所以，arrayPoolSize 如果是低内存的话，就是 2MB，因为 _LOW_MEMORY_BYTE_ARRAY_POOL_DIVISOR  = 2。_然后算出 maxSize，再算出 availableSize，再算出 part，最后得出 bitmapPoolSize。
+首先判断当前是否是低内存，判断的方法是调用 ActivityManager#isLowRamDevice 方法。然后算出 arryPoolSize，arrayPoolSizeBytes 的默认值是 4 * 1024 * 1024，即 4MB。所以，  arrayPoolSize 如果是低内存的话，就是 2MB，因为 _LOW_MEMORY_BYTE_ARRAY_POOL_DIVISOR  = 2。_然后算出 maxSize，再算出 availableSize，再算出 part，最后得出 bitmapPoolSize。
 
 在 LruBitmapPool 中，相关的具体操作是交给 LruPoolStrategy 实现，是构造函数中创建：
 
@@ -213,7 +213,9 @@ public V get(K key) {
     return entry.removeLast();
 }
 ```
+
 removeLast：
+
 ```java
 public V removeLast() {
     // LinkedEntry 组成的是一个双向的链表，head.prev 是链表的尾节点
@@ -353,7 +355,7 @@ private Bitmap decodeFromWrappedStreams(InputStream is,
 ```
 
 **int[] sourceDimensions = _getDimensions_(is, options, callbacks, bitmapPool);**
-**
+ 
 根据 InputStream 来获取图片的宽高：
 
 ```java
@@ -504,11 +506,11 @@ if (arrayPool == null) {
 
 LruArrayPool 实现了 ArryPool，ArryPool 的主要作用是缓存 int[] 和 byte[]。
 
-![image.png](https://cdn.nlark.com/yuque/0/2019/png/450005/1567000393652-fb520a6a-38cf-4765-b9e0-b73d9c397409.png#align=left&display=inline&height=271&originHeight=179&originWidth=433&size=64326&status=done&width=655)
+![glide5.png](https://s2.loli.net/2023/06/19/Mzn3tUurbsCZyEh.png)
 
 ArrayPool 的一个辅助类 ArrayAdapterInterface，它的作用是隔离 int[] 和 byte[] 的差别。
 
-![image.png](https://cdn.nlark.com/yuque/0/2019/png/450005/1567000602028-b53b86dc-d94b-4f22-983c-fe542610b98a.png#align=left&display=inline&height=197&originHeight=122&originWidth=406&size=38554&status=done&width=654)
+![glide6.png](https://s2.loli.net/2023/06/19/sKqm7NEWBDcxJT1.png)
 
 它的实现类有两个，分别是 ByteArrayAdapter 和 IntegerArrayAdapter：
 

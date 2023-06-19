@@ -170,7 +170,7 @@ private EngineResource<?> getEngineResourceFromCache(Key key) {
  `Resource<?> cached = cache.remove(key); ` 去取的，所以是取完缓存就把缓存从 LruCache 中删除并返回。取完回到 loadFromCache 方法中，如果缓存不为空的话，就会调用 `activeResources.activate(key, cached);`  把缓存存在弱引用中。
 
 **内存缓存是何时存进去的？**
-**
+ 
 在上一篇分析中，可以知道 Glide 在加载完后会回调 EngineJonb 的 onResourceReady 方，在 onResourceReady 里面会调用 notifyCallbacksOfException：
 
 ```java
@@ -213,7 +213,7 @@ void notifyCallbacksOfResult() {
 }
 ```
  
-其中** listener.onEngineJobComplete(this, localKey, localResource); ** 回调的实现在 Engine 里面：
+其中**listener.onEngineJobComplete(this, localKey, localResource);** 回调的实现在 Engine 里面：
 
 ```java
 public synchronized void onEngineJobComplete(
@@ -305,14 +305,14 @@ synchronized void acquire() {
 }
 ```
 
-在 incrementPendingCallbacks 方法里最终调用里调用了 engineResource.acquire(); 
-然方法最后在  decrementPendingCallbacks 中又调用了 engineResource.release() ; 
-engineResource 是我们的图片资源的包装对象。
-acquire()  和 release() 方法都是对齐成员变量。
-acquired 的操控 acquire() 是给 acquired 加一。
-release() 是给 acquired 减一。
+在 incrementPendingCallbacks 方法里最终调用里调用了 engineResource.acquire();   
+然方法最后在  decrementPendingCallbacks 中又调用了 engineResource.release() ;   
+engineResource 是我们的图片资源的包装对象。  
+acquire()  和 release() 方法都是对齐成员变量。  
+acquired 的操控 acquire() 是给 acquired 加一。  
+release() 是给 acquired 减一。  
 **当 acquired 大于 0 的时候说明这个图片我们正在使用，当他等于 0 的时候，说明现在没使用可以存在 LruCache中。**
-**
+ 
 # 硬盘缓存
 
 
@@ -338,10 +338,10 @@ private void runWrapped() {
 }
 ```
  
-这里判断的 runReason 是这样的：
-**INITIALIZE：第一次加载的时候 **
-**SWITCH_TO_SOURCE_SERVICE：从硬盘缓存中取 **
-**DECODE_DATA：解析从网络加载完的数据 **
+这里判断的 runReason 是这样的：  
+**INITIALIZE：第一次加载的时候**  
+**SWITCH_TO_SOURCE_SERVICE：从硬盘缓存中取**  
+**DECODE_DATA：解析从网络加载完的数据**
 
 如果是在磁盘里面取缓存的话， currentGenerator 获取到的是 ResourceCacheGenerator，接下来的 runGenerators 中，执行的是 startNext 方法：
 
@@ -442,7 +442,7 @@ public File get(Key key) {
 在 get 方法中，可以看到是在 DiskLruCache 中取的缓存。
 
 **那么磁盘缓存是在哪里存进去的呢？**
-**
+ 
 存磁盘缓存一般都是加载完图片后再存储的，在上一篇的分析中知道，Glide 加载完后会回调 callback 的 onDataReady 方法，onDataReady 是在 SourceGenerator 中实现的：
 
 ```java
@@ -548,4 +548,4 @@ private void cacheData(Object dataToCache) {
 }
 ```
 
-可以看到通过 **helper.getDiskCache().put(originalKey, writer); **把缓存存在浏览 DiskCache 中。
+可以看到通过 **helper.getDiskCache().put(originalKey, writer);**把缓存存在浏览 DiskCache 中。

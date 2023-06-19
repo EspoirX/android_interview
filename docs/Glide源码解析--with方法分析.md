@@ -1,4 +1,6 @@
-![image.png](https://cdn.nlark.com/yuque/0/2019/png/450005/1566206972602-f17c9533-1015-4020-a6f0-84e1b53628ea.png#align=left&display=inline&height=422&originHeight=844&originWidth=528&size=244352&status=done&width=264)  **Glide 目录结构**
+![glide.png](https://s2.loli.net/2023/06/19/vA7S4xQswdJWKX8.png)
+
+**Glide 目录结构**
 
 Glide 可以大概分为下面几部分：
 加载请求，执行引擎，数据加载，解码器，编码器，缓存...
@@ -10,11 +12,12 @@ Glide 的简单使用：
 ```
 
 第一次使用 Glide 的加载流程：
-![image.png](https://cdn.nlark.com/yuque/0/2019/png/450005/1566207275458-3bd600ed-5874-4596-b63b-0dce55205aeb.png#align=left&display=inline&height=429&originHeight=569&originWidth=971&size=61572&status=done&width=732)
+
+![glide1.png](https://s2.loli.net/2023/06/19/uf87XbBGPTDl2wz.png)
 
 **Glide#with 方法**
 
-![image.png](https://cdn.nlark.com/yuque/0/2019/png/450005/1566207583899-ef4f1d17-12d9-49f2-a44e-9cd5d34bb755.png#align=left&display=inline&height=212&originHeight=242&originWidth=836&size=168964&status=done&width=733)
+![glide2.png](https://s2.loli.net/2023/06/19/BApmJyrFDTYKVMU.png)
 
 with 方法有 6 个重载，他们都返回  RequestManager 对象，他们的实现都是通过 getRetriever 方法获取到 RequestManagerRetriever 对象，然后再通过 RequestManagerRetriever#get 去获取的。
 
@@ -234,7 +237,8 @@ private SupportRequestManagerFragment getSupportRequestManagerFragment(
 }
 ```
 
-可以看到，在 supportFragmentGet 中，通过 getSupportRequestManagerFragment 方法创建了一个叫做 SupportRequestManagerFragment 的 Fragment，**这个 Fragment 是跟 Glide 的生命周期绑定有关的**。然后判断 requestManager 是否为空，当然，第一次的时候是空的，当空的时候，通过 factory#build 方法创建 RequestManager 对象然后通过 setRequestManager 方法设置给 Fragment ，最后再返回，这里的 factory 是 RequestManagerFactory，它的默认实现是 _DEFAULT_FACTORY：_
+可以看到，在 supportFragmentGet 中，通过 getSupportRequestManagerFragment 方法创建了一个叫做 SupportRequestManagerFragment 的 Fragment，**这个 Fragment 是跟 Glide 的生命周期绑定有关的**。  
+然后判断 requestManager 是否为空，当然，第一次的时候是空的，当空的时候，通过 factory#build 方法创建 RequestManager 对象然后通过 setRequestManager 方法设置给 Fragment ，最后再返回，这里的 factory 是 RequestManagerFactory，它的默认实现是 _DEFAULT_FACTORY：_
 
 ```java
 public interface RequestManagerFactory {

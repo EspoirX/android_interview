@@ -95,7 +95,7 @@ load 方法后的 into 最后都会调用上面代码所示的 into 方法，在
 into 有几个重载，这里拿常用的需要传入 ImageView 的重载来看。
 
 **在 into 方法里，有一个参数 target，当我们使用时，会先根据 Target 类型创建不同的 Target，然后 RequestBuilder 将这个 target 当做参数创建 Request 对象，Request 与 Target 就是这样关联起来的。**
-**
+ 
 而 ImageView 对应的 target 由 ImageViewTargetFactory 负责创建，继承于 ViewTarget。从上面方法中可以看到。into 会先从 target 中取出缓存的 request，如果存在并且等同于当前的 request，则释放当前的 request ，执行缓存的 request 的 begin 方法。否则通过 target.setRequest(request); 存起来。
 
 在 ViewTarget 中，setRequest 其实就是调用 View 的 setTag 方法，这也是为什么当你在用 Glide 时不能给 View 设置 tag 的原因。
@@ -233,13 +233,13 @@ public void runRequest(@NonNull Request request) {
 
 
 # Request
-![image.png](https://cdn.nlark.com/yuque/0/2019/png/450005/1566270032201-6348c928-411a-4305-8c1b-b1477b8bdd0f.png#align=left&display=inline&height=353&originHeight=200&originWidth=413&size=61390&status=done&width=728)
+![glide3.png](https://s2.loli.net/2023/06/19/fDQp2xs8LWkbYF3.png)
 
 Request 是一个接口，加载资源的请求是基于这个接口的，它的实现类有三个：
-![image.png](https://cdn.nlark.com/yuque/0/2019/png/450005/1566271516864-48803091-f999-480a-bb57-b5c04c68b29b.png#align=left&display=inline&height=173&originHeight=132&originWidth=556&size=44847&status=done&width=730)
+![glide4.png](https://s2.loli.net/2023/06/19/r9MzWUNZCkAIXbs.png)
 
 **SingleRequest**
-**
+ 
 这个类负责执行请求并将结果反映到 Target 上。在 RequestBuilder#buildRequest 方法中，如果按正常流程，创建的是 SingleRequest，下面看 SingleRequest#begin 方法：
 
 ```java
@@ -934,7 +934,7 @@ public Resource<Bitmap> decode(@NonNull InputStream source, int width, int heigh
 ```
 
 RecyclableBufferedInputStream 是包装现有的 InputStream 并缓存输入的类。**而这里阿里有一个面试题是问到，为什么这里使用 ByteArrayPool ，为什么选择数组？**
-**
+ 
 然后通过 Downsampler#decode 方法去解码：
 
 
