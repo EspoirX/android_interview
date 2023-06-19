@@ -1,4 +1,4 @@
-理解Java中的**synchronized**关键字。
+理解Java中的**synchronized**关键字。  
 指标：理解**synchronized**的含义、明确**synchronized**关键字修饰普通方法、静态方法和代码块时锁对象的差异。
 
 有如下一个类A
