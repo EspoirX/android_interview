@@ -572,8 +572,8 @@ fun connect(
 - 如果请求是不安全的请求，会对请求执行一些额外的限制:
  
 
-      (1). ConnectionSpec 集合必须包含 ConnectionSpec.CLEARTEXT。也就是说 OkHttp 用户可以通过                   OkHttpClient 设置不包含 ConnectionSpec.CLEARTEXT 的 ConnectionSpec 集合来禁用所有的明文             要求。
-      (2). 平台本身的安全策略允向相应的主机发送明文请求。对于Android平台而言，这种安全策略主要由系统的               组件 android.security.NetworkSecurityPolicy 执行。平台的这种安全策略不是每个 Android 版本都有             的。Android6.0之后存在这种控制。                                                                                               (okhttp/okhttp/src/main/java/okhttp3/internal/platform/AndroidPlatform.java 里面的                            isCleartextTrafficPermitted()方法)
+      (1). ConnectionSpec 集合必须包含 ConnectionSpec.CLEARTEXT。也就是说 OkHttp 用户可以通过 OkHttpClient 设置不包含 ConnectionSpec.CLEARTEXT 的 ConnectionSpec 集合来禁用所有的明文要求。
+      (2). 平台本身的安全策略允向相应的主机发送明文请求。对于Android平台而言，这种安全策略主要由系统的组件 android.security.NetworkSecurityPolicy 执行。平台的这种安全策略不是每个 Android 版本都有             的。Android6.0之后存在这种控制。(okhttp/okhttp/src/main/java/okhttp3/internal/platform/AndroidPlatform.java 里面的isCleartextTrafficPermitted()方法)
 
 - 根据请求判断是否需要建立隧道连接，如果建立隧道连接则调用 **connectTunnel**
 - 如果不是隧道连接则调用 **connectSocket** 建立普通连接。
@@ -636,8 +636,8 @@ private fun connectSocket(
 - 完成特定于平台的连接建立
 - 创建用于 I/O 的 source 和 sink
 
-设置了 SOCKS 代理的情况下，仅有的特别之处在于，是通过传入 proxy 手动创建 Socket。
-route 的 socketAddress 包含目标 HTTP 服务器的域名。由此可见 SOCKS 协议的处理，主要是在 Java 标准库的 java.net.Socket 中处理，对于外界而言，就好像是HTTP服务器直接建立连接一样，因此连接时传入的地址都是HTTP 服务器的域名。
+设置了 SOCKS 代理的情况下，仅有的特别之处在于，是通过传入 proxy 手动创建 Socket。  
+route 的 socketAddress 包含目标 HTTP 服务器的域名。由此可见 SOCKS 协议的处理，主要是在 Java 标准库的 java.net.Socket 中处理，对于外界而言，就好像是HTTP服务器直接建立连接一样，因此连接时传入的地址都是HTTP 服务器的域名。  
 而对于明文的 HTTP 代理的情况下，这里没有任何特殊处理。route 的 socketAddress 包含着代理服务器的 IP 地址。HTTP 代理自身会根据请求及相应的实际内容，建立与 HTTP 服务器的 TCP 连接，并转发数据。
 
 #### 2.2.3 建立隧道逻辑 connectTunnel
@@ -717,7 +717,7 @@ private fun establishProtocol(
 
 
 不管是建立隧道连接，还是建立普通连接，都少不了建立协议这一步骤，这一步是建立好 TCP 连接之后，而在该TCP 能被拿来收发数据之前执行的**。它主要为了数据的加密传输做一些初始化，比如 TCL 握手，HTTP/2 的协商。**
-**
+
 
 1. 对于加密的数据传输，创建TLS连接。对于明文传输，则设置 protocol 和 socket。socket 直接指向应用层，如 HTTP 或 HTTP/2，交互的Socket。
 - 对于明文传输没有设置 HTTP 代理的 HTTP 请求，它是与 HTTP 服务器之间的 TCP socket。
@@ -803,15 +803,15 @@ private fun connectTls(connectionSpecSelector: ConnectionSpecSelector) {
 }
 ```
 
-TLS 连接是对原始 TCP 连接的一个封装，以及听过 TLS 握手，及数据收发过程中的加解密等功能。在Java中，用SSLSocket 来描述。上面建立的TLS连接的过程大体为：
-1、用 SSLSocketFactory 基于原始的 TCP Socket，创建一个 SSLSocket。
-2、配置 SSLSocket。
-3、在前面选择的 ConnectionSpec 支持 TLS 扩展参数时，配置 TLS 扩展参数。
-4、启动 TLS 握手
-5、TLS 握手完成之后，获取证书信息。
-6、对 TLS 握手过程中传回来的证书进行验证。
-7、在前面选择的 ConnectionSpec 支持 TLS 扩展参数时，获取 TLS 握手过程中顺便完成的协议协商过程所选择的协议。这个过程主要用于 HTTP/2 的 ALPN 扩展。
-8、OkHttp 主要使用 Okio 来做 IO 操作，这里会基于前面获取到 SSLSocket 创建于执行的 IO 的BufferedSource 和 BufferedSink 等，并保存握手信息以及所选择的协议。
+TLS 连接是对原始 TCP 连接的一个封装，以及听过 TLS 握手，及数据收发过程中的加解密等功能。在Java中，用SSLSocket 来描述。上面建立的TLS连接的过程大体为：  
+1、用 SSLSocketFactory 基于原始的 TCP Socket，创建一个 SSLSocket。  
+2、配置 SSLSocket。  
+3、在前面选择的 ConnectionSpec 支持 TLS 扩展参数时，配置 TLS 扩展参数。  
+4、启动 TLS 握手  
+5、TLS 握手完成之后，获取证书信息。  
+6、对 TLS 握手过程中传回来的证书进行验证。  
+7、在前面选择的 ConnectionSpec 支持 TLS 扩展参数时，获取 TLS 握手过程中顺便完成的协议协商过程所选择的协议。这个过程主要用于 HTTP/2 的 ALPN 扩展。  
+8、OkHttp 主要使用 Okio 来做 IO 操作，这里会基于前面获取到 SSLSocket 创建于执行的 IO 的BufferedSource 和 BufferedSink 等，并保存握手信息以及所选择的协议。  
 
 至此连接已经建立连接已经结束了。
 

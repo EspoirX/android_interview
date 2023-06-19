@@ -36,7 +36,7 @@ internal fun enqueue(call: AsyncCall) {
 }
 ```
 
-在执行异步请求时，先将请求 Running 添加到 **readyAsyncCalls** 中，在 OkHttpClient 中调用 newCall 时，forWebSocket 为 false，**接下来会在当前的异步队列中查找是否存在与当前 call 的 host 相等的请求，如果有则返回 并且更新 callsPerHost**，callsPerHost 是 AtomicInterget 类型。（即** 地址相同的会共享socket，callPerHost代表当前线程数 **）
+在执行异步请求时，先将请求 Running 添加到 **readyAsyncCalls** 中，在 OkHttpClient 中调用 newCall 时，forWebSocket 为 false，**接下来会在当前的异步队列中查找是否存在与当前 call 的 host 相等的请求，如果有则返回 并且更新 callsPerHost**，callsPerHost 是 AtomicInterget 类型。（即 **地址相同的会共享socket，callPerHost代表当前线程数** ）
 
 ```kotlin
 private fun findExistingCallWithHost(host: String): AsyncCall? {
@@ -221,12 +221,12 @@ override fun run() {
   }
 ```
 
-OkHttp 的拦截器执行顺序是：** RealInterceptorChain -> 自定义拦截器 -> RetryAndFollowUpInterceptor**
-** -> BridgeInterceptor -> CacheInterceptor -> ConnectInterceptor -> CallServerInterceptor。**
+OkHttp 的拦截器执行顺序是：**RealInterceptorChain -> 自定义拦截器 -> RetryAndFollowUpInterceptor**
+**-> BridgeInterceptor -> CacheInterceptor -> ConnectInterceptor -> CallServerInterceptor。**
 
 RealInterceptorChain 的 proceed 方法里面就是进行一些判断，并执行下一个拦截器的 intercept 方法，注意第一次执行时 exchange 为 null。该拦截器的作用是将所有拦截器串联起来。
-**
-**
+ 
+
 # 3. RetryAndFollowUpInterceptor
 RetryAndFollowUpInterceptor 是负责失败重试和重定向的拦截器。**它是通过死循环来实现重连机制。**
 
@@ -300,7 +300,7 @@ internal fun exitNetworkInterceptorExchange(closeExchange: Boolean) {
 }
 ```
 
-在 try 中，**通过拦截器的返回值拿到最终的网络请求结果，**之所以 RetryAndFollowUpInterceptor 要第一个执行，是因为如果在其他位置就拿不到最终的结果，拦截器的请求返回值是一层层传递的。在这个过程中，如果发生 catch , 就尝试去恢复。
+在 try 中，**通过拦截器的返回值拿到最终的网络请求结果** 之所以 RetryAndFollowUpInterceptor 要第一个执行，是因为如果在其他位置就拿不到最终的结果，拦截器的请求返回值是一层层传递的。在这个过程中，如果发生 catch , 就尝试去恢复。
 
 ```kotlin
 try {
@@ -311,7 +311,7 @@ try {
 
 在 catch 中，首先判断是不是发生了 RouteException。RouteException 是会在获取一个 RealConnection 与 Socket 连接是抛出。
 
-![image.png](https://cdn.nlark.com/yuque/0/2020/png/450005/1583749543605-977bd747-6863-4513-b222-0ae8d33f2f41.png#align=left&display=inline&height=304&originHeight=294&originWidth=676&size=283816&status=done&style=none&width=698)
+![okhttp1.png](https://s2.loli.net/2023/06/19/Dr9FSoTmbNUeGlO.png)
 
 如果抛出了异常，会通过 **recover** 方法判断是否可以恢复：
 
@@ -346,7 +346,7 @@ private fun recover(
 - SSLHandshakeException：ssl握手异常
 - SSLPeerUnverifiedException：ssl证书校验异常
 
-关于连接超时的异常处理：
+关于连接超时的异常处理：  
   对于 SocketTimeoutException 的异常，表示连接超时异常，这个异常是可以进行重连的，即OkHttp内部对连接超时异常会进行自动重试处理。
 ```kotlin
 if (e is InterruptedIOException) {
