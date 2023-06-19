@@ -1,15 +1,19 @@
 **基于 leakcanary-android:2.0-beta-3 版本**
-**
+ 
 **leakcanary2.0** 开始，只需要添加了依赖，就可以使用了，不需要再初始化：
-![image.png](https://cdn.nlark.com/yuque/0/2019/png/450005/1571911822723-decdbad0-9ac3-4709-924c-c182e77cdb78.png#align=left&display=inline&height=266&originHeight=532&originWidth=1644&size=99933&status=done&width=822)那么它是怎么做到的？
+
+![LeakCanary1.png](https://s2.loli.net/2023/06/19/tNqCDGX8PZWQm3r.png)
+
+那么它是怎么做到的？
 
 # 初始化
 下载 LeakCanary 源码，发现有很多个 library。
- ![image.png](https://cdn.nlark.com/yuque/0/2019/png/450005/1571912003061-ec1c1cba-672e-48a3-9395-343e3c96e001.png#align=left&display=inline&height=273&originHeight=546&originWidth=1034&size=452967&status=done&width=517)
+
+![LeakCanary2.png](https://s2.loli.net/2023/06/19/6mKosfldb7gFWZt.png)
 
 其中，在 **leakcanary-android-process **的清单文件中发现：
 
-![image.png](https://cdn.nlark.com/yuque/0/2019/png/450005/1571912085762-202998f7-ec47-4216-826e-63d12503d8e3.png#align=left&display=inline&height=138&originHeight=276&originWidth=1462&size=342249&status=done&width=731)
+![LeakCanary3.png](https://s2.loli.net/2023/06/19/C6FpAyKOechHGMw.png)
 
 LeakCanary 在另一个进程 leakcanary 中注册了一个 ContentProvider：
 
