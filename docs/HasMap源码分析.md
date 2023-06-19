@@ -8,11 +8,12 @@ public class HashMap<K,V> extends AbstractMap<K,V>
 
 HasMap 继承了 AbstractMap 类，实现了 Map，Cloneable 和 Serializable 接口。
 HasMap 是一个数组加链表的结构：
-![20160925154951217.png](https://cdn.nlark.com/yuque/0/2019/png/450005/1571628706398-b93521a3-c4bf-4a21-981f-f4771982dc68.png#align=left&display=inline&height=456&originHeight=456&originWidth=541&size=57793&status=done&style=none&width=541)
+
+![hashmap.png](https://s2.loli.net/2023/06/19/XoTglvxJCbsRS25.png)
 
 上面这个图片结构是 JDK 1.7 的，在 JDK1.8 后，HashMap 的结构再也不是数组加链表，而是数组加链表加红黑树：
 
-![5cd1d2c1c1cd7.jpg](https://cdn.nlark.com/yuque/0/2019/jpeg/450005/1571737229085-93e13412-be95-4bf9-920e-8bdb74e9dbd2.jpeg#align=left&display=inline&height=437&originHeight=437&originWidth=773&size=96737&status=done&style=none&width=773)
+![hashmap1.jpeg](https://s2.loli.net/2023/06/19/Lp1NA7f4W2xdZSl.jpg)
 
 HasMap 是线程不安全的，允许 **key为null**，**value为null**。遍历时无序。
 其底层数据结构是**数组**称之为**哈希桶**，每个**桶里面放的是链表**，链表中的**每个节点**，就是哈希表中的**每个元素**。
@@ -115,7 +116,7 @@ public HashMap(Map<? extends K, ? extends V> m) {
 HasMap 有四个构造函数。
 
 1. 先看无参构造函数 **HasMap()，**在这个构造函数中给一个变量赋值，**loadFactor** 的意思是**加载因子**，它的默认值 **DEFAULT_LOAD_FACTOR 为 0.75f。加载因子的作用是用于计算哈希表元素数量的阈值。  threshold = 哈希桶.length * loadFactor;**
-2. 两个参数的构造函数 **HashMap(int initialCapacity, float loadFactor)， **initialCapacity 为初始化容量，**MAXIMUM_CAPACITY** 的默认值是 **1 ****<< ****30，即2的30次方。**在这个构造函数中，首先进行边界处理，如果指定的初始化容量大于最大值，则为最大值，loadFactor 加载因子也不能为负数。最后再通过 tableSizeFor 方法计算出 **阈值 threshold，即哈希桶长度。**
+2. 两个参数的构造函数 **HashMap(int initialCapacity, float loadFactor)， **initialCapacity 为初始化容量，**MAXIMUM_CAPACITY** 的默认值是 **1<<30，即2的30次方。**在这个构造函数中，首先进行边界处理，如果指定的初始化容量大于最大值，则为最大值，loadFactor 加载因子也不能为负数。最后再通过 tableSizeFor 方法计算出 **阈值 threshold，即哈希桶长度。**
 
 ```java
 static final int tableSizeFor(int cap) {
@@ -134,7 +135,7 @@ static final int tableSizeFor(int cap) {
 这里采用了位运算，目的是提高效率，tableSizeFor 会根据期望容量 cap，返回 **2 的 n 次方形式的** 哈希桶的实际容量 length。 返回值一般会 >=cap。
 
 3. 构造函数 **HashMap(int initialCapacity)** 为指定初始化容量的构造函数。
-4. 构造函数 **HashMap(Map<? extends K, ? extends V> m) **的作用是新建一个哈希表，同时将另一个 map m 里的所有元素加入表中。
+4. 构造函数 **HashMap(Map<? extends K, ? extends V> m)**的作用是新建一个哈希表，同时将另一个 map m 里的所有元素加入表中。
 
 # putMapEntries
 看下最后一个构造函数中的 putMapEntries 方法。
@@ -174,7 +175,7 @@ final void putMapEntries(Map<? extends K, ? extends V> m, boolean evict) {
 
 1. 首先拿到传入 Map 的长度 s。
 2. 判断长度，大于 0 才进行后续操作
-3. **table** 的类型是 **Node<K,V>[]，可以理解为是一个表（哈希桶），它的长度始终是 2 的幂。**先判断当前的表是否为空，如果空的话，根据传进来 Map 的长度 s 和当前加载因子 loadFactor 计算出一个新的阈值 ft。
+3. **table** 的类型是 **Node<K,V>[]，可以理解为是一个表（哈希桶），它的长度始终是 2 的幂。** 先判断当前的表是否为空，如果空的话，根据传进来 Map 的长度 s 和当前加载因子 loadFactor 计算出一个新的阈值 ft。
 4. 然后在一个三元表达式中判断 ft 的边界是否合法，然后把它赋值给 t。
 5. 如果新计算处理的阈值 t 大于当前阈值 threshold，则调用 tableSizeFor 方法计算并返回一个大于等于 t 并满足 2 的 n 次方的阈值赋给 threshold。
 6. 如果当前表 table 不为空并且 **s>threshold 即 Map 的长度大于当前阈值，代表着当前长度不够了，要调用 resize 方法进行扩容。**
@@ -342,7 +343,7 @@ else if (oldThr > 0) // initial capacity was placed in threshold
     newCap = oldThr;
 ```
 即 oldCap = 0 ，并且 oldThr 大于 0 时，oldThr 是当前阀值 threshold，所以这里是**当前表是空的，但是有阀值，代表是初始化时指定了容量、阈值的情况。则新表的容量 newCap 就等于旧的阀值。**
-**
+ 
 第三个判断 else:
 ```java
 else {               // zero initial threshold signifies using defaults
@@ -364,9 +365,9 @@ if (newThr == 0) {
 }
 ```
 这里判断了 newThr 是否为 0，进过一到三的判断和赋值，可以看出还有一些情况下 newThr 是没有赋值的。 就是**当前表是空的，但是有阈值的情况，这时候会根据新表容量 newCap 和 当前加载因子 求出新的阈值 ft，然后对新阀值进行越界判断后赋值给 newThr。**
-**
+ 
 **最后再把计算处理的 newThr ** **赋值给 threshold 更新当前的阀值。**
-**
+ 
 进过一系列判断计算后，newCap 和 newThr 都计算出来了，接下来就是第二部分的创建新的哈希桶。
 
 ```java
@@ -421,9 +422,9 @@ if (oldTab != null) {
 ```
 这个判断就是把旧哈希桶的值转移到新的上面。
 
-1.  通过 ** if ((e = oldTab[j]) != null) ** 判断当前节点是否为 null，并且赋值给 e 保存着。
-2. 如果不为 null，则清空旧哈希桶的值：** oldTab[j] = null，释放资源**
-3. **if (e.next == null)  newTab[e.hash & (newCap - 1)] = e; ** 通过判断当前节点有没有下一个节点，如果没有的话也就是说旧的哈希桶只有一个元素。那么直接把取出来的 e 保存在新的哈希桶中。
+1.  通过 **if ((e = oldTab[j]) != null)** 判断当前节点是否为 null，并且赋值给 e 保存着。
+2. 如果不为 null，则清空旧哈希桶的值：**oldTab[j] = null，释放资源**
+3. **if (e.next == null)  newTab[e.hash & (newCap - 1)] = e;** 通过判断当前节点有没有下一个节点，如果没有的话也就是说旧的哈希桶只有一个元素。那么直接把取出来的 e 保存在新的哈希桶中。
 
 （**这里取下标 是用 哈希值 与 桶的长度-1 。 由于桶的长度是2的n次方，这么做其实是等于 一个模运算。但是效率更高）**
 
@@ -431,8 +432,8 @@ if (oldTab != null) {
 5. 如果发生过哈希碰撞，节点数小于8个，则根据链表上每个节点的哈希值，依次放入新哈希桶对应下标位置。
 
 因为扩容是容量翻倍，所以原链表上的每个节点，现在可能存放在原来的下标，即 low 位， 或者扩容后的下标，即high位。high位 =  low位+原哈希桶容量：
-![WX20191021-164655@2x.png](https://cdn.nlark.com/yuque/0/2019/png/450005/1571647639822-4167d909-c01d-46f4-b9ef-a7480b7c8357.png#align=left&display=inline&height=680&originHeight=680&originWidth=1746&size=106779&status=done&style=none&width=1746)
 
+![hashmap2.png](https://s2.loli.net/2023/06/19/7fShwIZgmOvQRpy.png)
 
 # putVal
 看回 putMapEntries 方法里面的 putVal 方法：
@@ -520,11 +521,11 @@ void afterNodeRemoval(Node<K,V> p) { }
 
 总结：
 
-1. HasMap 的运算尽量都用**位运算**代替**，更高效。**
+1. HasMap 的运算尽量都用**位运算**代替 ，更高效。 
 2. 对于扩容导致需要新建数组存放更多元素时，除了要将老数组中的元素迁移过来，也记得将老数组中的引用置null，以便GC。
 3. 取下标 是用 **哈希值 与运算 （桶的长度-1）：** **i = (n - 1) & hash**。 由于桶的长度是 2 的 n 次方，这么做其实是等于 一个**模运算**。但是**效率更高。**
 4. 扩容时，如果发生过哈希碰撞，节点数小于8个。则要根据链表上每个节点的哈希值，依次放入新哈希桶对应下标位置。大于8个，则交给红黑树算法。
-5. 因为扩容是容量翻倍，所以原链表上的每个节点，现在可能存放在原来的下标，即 low 位， 或者扩容后的下标，即 high 位。** high位 = low位+原哈希桶容量**
+5. 因为扩容是容量翻倍，所以原链表上的每个节点，现在可能存放在原来的下标，即 low 位， 或者扩容后的下标，即 high 位。**high位 = low位+原哈希桶容量**
 6. 利用**哈希值 与运算 旧的容量** ，**if ((e.hash & oldCap) == 0)，**可以得到哈希值去模后，是大于等于 oldCap 还是小于 oldCap，**等于0代表小于oldCap**，**应该存放在低位，否则存放在高位**。这里又是一个利用位运算 代替常规运算的高效点。
 7. 如果追加节点后，链表数量 >=8，则转化为红黑树
 8. 插入节点操作时，有一些空实现的函数，用作 LinkedHashMap 重写使用。
@@ -549,9 +550,9 @@ static final int hash(Object key) {
 }
 ```
 
-可以看到 hash 值是根据 key 通过 hash 方法计算出来的。这个方法称为 **扰动函数。**
-key 的 hash 值，并不仅仅只是 key 对象的** hashCode() **方法的返回值，还会经过**扰动函数**的扰动，**以使 hash 值更加均衡。**
-**因为 hashCode() 是 int 类型，取值范围是40多亿，只要哈希函数映射的比较均匀松散，碰撞几率是很小的。
+可以看到 hash 值是根据 key 通过 hash 方法计算出来的。这个方法称为 **扰动函数。**  
+key 的 hash 值，并不仅仅只是 key 对象的**hashCode()** 方法的返回值，还会经过**扰动函数**的扰动，**以使 hash 值更加均衡。**  
+因为 hashCode() 是 int 类型，取值范围是40多亿，只要哈希函数映射的比较均匀松散，碰撞几率是很小的。  
 
 但就算原本的 hashCode() 取得很好，每个 key 的 hashCode() 不同，但是由于 HashMap的 哈希桶的长度远比hash 取值范围小，默认是16，所以当对 hash 值以桶的长度取余，以找到存放该 key 的桶的下标时，由于取余是通过与操作完成的，会忽略 hash 值的高位。
 
@@ -642,9 +643,9 @@ final Node<K,V> removeNode(int hash, Object key, Object value,
 
 从哈希表中删除某个节点， 如果参数 matchValue 是 true，则必须 key 、value 都相等才删除。如果 movable 参数是 false，在删除节点时，不移动其他节点。
 
-**removeNode 方法主要的逻辑是找出待删除的节点 node，如果待删除的节点是链表头那么 node.next 的值即为 null，所以通过  tab[index] = node.next; ，tab 的值也会变成 null。**
-**如果待删除节点在链表中间，那么 node.next 的值就是下一个节点的值。通过 p.next = node.next; 操作就是相当于把节点往前挪一位，覆盖点待删除的节点。**
-**
+**removeNode 方法主要的逻辑是找出待删除的节点 node，如果待删除的节点是链表头那么 node.next 的值即为 null，所以通过  tab[index] = node.next; ，tab 的值也会变成 null。**  
+**如果待删除节点在链表中间，那么 node.next 的值就是下一个节点的值。通过 p.next = node.next; 操作就是相当于把节点往前挪一位，覆盖点待删除的节点。**  
+ 
 afterNodeRemoval 是一个空方法，LinkedHashMap 重写用的回调函数。
 
 # remove(Object key, Object value)
@@ -792,7 +793,7 @@ final class EntrySet extends AbstractSet<Map.Entry<K,V>> {
 }
 ```
 
-可以看到，在 EntrySet 方法中，remove 和 contains 方法的最终实现还是调用了 removeNode 和 getNode。
+可以看到，在 EntrySet 方法中，remove 和 contains 方法的最终实现还是调用了 removeNode 和 getNode。  
 iterator 方法返回的是一个 EntryIterator。平时使用遍历也是获取这个东西最多：
 
 ```java

@@ -162,7 +162,7 @@ internal object FragmentDestroyWatcher {
 ```
 
 首先通过判断，添加 android O 及以上版本的 Fragment 以及 AndroidX 的 Fragment 监听支持。所以 **LeakCanary 是不支持 Android O 以下的 Fragment 监听的。**
-**
+ 
 ## android O Fragment 监听
 
 ```kotlin
@@ -337,19 +337,19 @@ class KeyedWeakReference(
 ```
 
 1. watchedObjects ：**watch() 方法传进来的引用，尚未判定为泄露。**
-2. queue：** 引用队列，配合弱引用使用**
+2. queue：**引用队列，配合弱引用使用**
 3. KeyedWeakReference ：**弱引用**
 
 通过 watch 方法传进来的引用，即 watchedObject ，都会通过：
 
 **val reference = KeyedWeakReference(watchedObject, key, name, watchUptimeMillis, queue)**
-**
+ 
 保存到 KeyedWeakReference 中，key 为 UUID，是唯一的，**queue 在这此时和弱引用关联**。reference 会通过 key 放在 watchedObjects 中。
 
 queue 是一个 ReferenceQueue 队列，配合弱引用使用。**弱引用一旦变得弱可达，就会立即入队。这将在 finalization 或者 GC 之前发生。**也就是说，**会被 GC 回收的对象引用，会保存在队列 queue 中。**
 
 在 removeWeaklyReachableObjects 方法中，循环从 queue 队列中取出**被 GC 回收的对象引用，判断如果不为空，则将这个引用在 watchedObjects 中移除。循环结束后，如果还有对象没有移除，那么剩下的就暂时标记为泄露的对象。**
-**
+ 
 ```kotlin
 checkRetainedExecutor.execute {
     moveToRetained(key)
@@ -537,11 +537,11 @@ interface GcTrigger {
 
 接下来的逻辑就是创建 dump heap 文件： **val heapDumpFile = heapDumper.dumpHeap()。**
 HeapDumper 是一个接口，它的实现类是 AndroidHeapDumper，dumpHeap 方法里面就是创建文件的一些 IO 操作。
-然后通过 **objectWatcher.clearObjectsWatchedBefore(heapDumpUptimeMillis)  **移除已经 heap dump 的 retainedKeys。
+然后通过 **objectWatcher.clearObjectsWatchedBefore(heapDumpUptimeMillis)** 移除已经 heap dump 的 retainedKeys。
 最后通过 **HeapAnalyzerService#runAnalysis** 方法分析 heap dump 文件。
 
 在 dumpHeap 方法中，核心方法是：**Debug.dumpHprofData(heapDumpFile._absolutePath_)**
-**
+ 
 # runAnalysis 
 
 ```kotlin
@@ -573,7 +573,7 @@ companion object {
 
 在 runAnalysis 方法中，可以看到它是启动一个前台服务 HeapAnalyzerService 来分析 heap dump 文件的。具体是如何分析的，是通过它的自己写的 shark 包中实现的，旧版本用的是 haha 库，但已经弃用了。
 
-![image.png](https://cdn.nlark.com/yuque/0/2019/png/450005/1571987649236-b7fed8cb-56b7-4010-bfc1-39ba3393384d.png#align=left&display=inline&height=255&originHeight=142&originWidth=366&size=35172&status=done&width=657)
+![LeakCanary4.png](https://s2.loli.net/2023/06/19/voMiWPRfTt246Uy.png)
 
 关于 Shark 库的介绍可以看这里：[https://square.github.io/leakcanary/shark/](https://square.github.io/leakcanary/shark/)
 主要有点是快速和低内存。
