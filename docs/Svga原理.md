@@ -1,4 +1,4 @@
-Svga 文件组成：
+Svga 文件组成：  
 Svga 文件是由多个图片加一个份配置文件（json）组成，设计在制作 svga 的时候在需要变化的帧上打上动画标记，那么配置文件在该帧的地方会生成一份对应动画的数据。所以每个帧信息记录着这个 svga 图像在这个帧需要展示的形状，大小，位置等，然后在解析的时候根据这些配置信息去做该帧下图片的对应动画。
 
 源码：
@@ -87,7 +87,7 @@ private fun decodeFromCacheKey(cacheKey: String, callback: ParseCompletion?,alia
 decodeFromCacheKey 主要是对解压包中的配置文件  movie.binary 和  movie.spec 进行读取和处理。根据命名可以猜测 movie.binary 是动画数据， movie.spec 是动画规范，而且  movie.spec 读取出来是一个 json 。
 最后都会通过 invokeCompleteCallback 回调出去一个 SVGAVideoEntity 对象。那么主要是看 SVGAVideoEntity 的第一个参数。
 
-**MovieEntity.ADAPTER.decode(it)**
+**MovieEntity.ADAPTER.decode(it)**  
 svga 解析 使用的是 pb 解析，pb 是一种格式，跟json是一个道理，但它的性能更高。那么 **ADAPTER.decode **就是使用pb解析的过程，怎么解析的可以忽略，我们看 MovieEntity 的内容有什么：
 ```kotlin
 public final class MovieEntity extends Message<MovieEntity, MovieEntity.Builder> {
