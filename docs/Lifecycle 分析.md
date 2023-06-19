@@ -183,15 +183,14 @@ static State getStateAfter(Event event) {
 ```
 
 可以看到 getStateAfter 方法就是把 Event 的类型对应的转换成 State 类型，而 getStateAfter 获取的是 **即将的事件。比如当前执行了 ONCREATE 和 ONSTOP，那么状态就会处于 CREATED。 **
-**
-**![640.png](https://cdn.nlark.com/yuque/0/2019/png/450005/1571278900759-d9140ff6-c102-491a-b209-0ad2cda8e5c5.png#align=left&display=inline&height=420&originHeight=420&originWidth=948&size=22319&status=done&width=948)**
-**
-**
+ 
+![lifecycle.png](https://s2.loli.net/2023/06/19/KEWq5vF1rxjSJhu.png)
+ 
 mState 是一个类型变量，用来存储当前类型，在 moveToState 方法中，首先判断**如果当前所处的状态和即将要处于的状态一样就不做任何操作**，否则执行下一步。
 
-先看看一些变量代表什么意思：
-**mHandlingEvent** ：是否正在处理 Event 事件
-**mAddingObserverCounter**：正在添加 Observer 计数器
+先看看一些变量代表什么意思：  
+**mHandlingEvent** ：是否正在处理 Event 事件  
+**mAddingObserverCounter**：正在添加 Observer 计数器  
 **mNewEventOccurred**：是否有新的事件发生了
 
 知道这变量意思后，应该就知道 moveToState 中那几个判断的意思了，则如果有新的事件在处理，则返回，什么都不做，如果没有，则处理新的事件。
@@ -247,7 +246,7 @@ private void forwardPass(LifecycleOwner lifecycleOwner) {
 }
 ```
 
-** ObserverWithState observer = entry.getValue(); **从 mObserverMap 中获取 ObserverWithState。
+**ObserverWithState observer = entry.getValue();** 从 mObserverMap 中获取 ObserverWithState。
 
 popParentState 和 pushParentState 分别是向 mParentStates 中添加和删除 item。
 
@@ -300,7 +299,7 @@ static class ObserverWithState {
 
 GenericLifecycleObserver 接口有很多个实现类：
 
-![image.png](https://cdn.nlark.com/yuque/0/2019/png/450005/1571280060937-bd7514f5-c2ca-4660-bd7a-50f12c4ca6ee.png#align=left&display=inline&height=291&originHeight=223&originWidth=572&size=94817&status=done&width=746)
+![lifecycle1.png](https://s2.loli.net/2023/06/19/z78V4EeyunpcmJr.png)
 
 主要看下 ReflectiveGenericLifecycleObserver：
 
@@ -369,7 +368,7 @@ private CallbackInfo createInfo(Class klass, @Nullable Method[] declaredMethods)
 getInfo 方法用到了缓存，因为 createInfo 里面有反射操作。首先看：
 
 **OnLifecycleEvent annotation = method.getAnnotation(OnLifecycleEvent.class);**
-**
+ 
 在 for 循环中，不断的遍历各个方法，获取方法上的名为 OnLifecycleEvent 的注解，这个注解正是实现 LifecycleObserver 接口时用到的。接下来：
 
 **Lifecycle.Event event = annotation.value();**
@@ -481,7 +480,7 @@ MethodReference 类中有两个变量，一个是 callType，它代表调用方�
 
 简单来说，实现 LifecycleObserver 接口的类中，注解修饰的方法和事件会被保存起来，通过反射对事件的对应方法进行调用。
 
-![6402.png](https://cdn.nlark.com/yuque/0/2019/png/450005/1571281158187-dbb517e8-0c41-4e14-9e7e-43c0c01227d5.png#align=left&display=inline&height=744&originHeight=744&originWidth=1014&size=30973&status=done&width=1014)
+![lifecycle2.png](https://s2.loli.net/2023/06/19/MQyR25J7cTkdPps.png)
 
 # LiveData
 
@@ -507,7 +506,7 @@ public void observe(@NonNull LifecycleOwner owner, @NonNull Observer<T> observer
 }
 ```
 
-通过上面分析，** owner.getLifecycle().addObserver(wrapper); **方法调用的是 LifecycleRegistry 的 addObserver 方法。
+通过上面分析，**owner.getLifecycle().addObserver(wrapper);** 方法调用的是 LifecycleRegistry 的 addObserver 方法。
 
 ```java
 @Override
@@ -660,7 +659,7 @@ private void dispatchingValue(@Nullable ObserverWrapper initiator) {
 ```
  
 **considerNotify**
-**
+ 
 ```java
 private void considerNotify(ObserverWrapper observer) {
     if (!observer.mActive) {

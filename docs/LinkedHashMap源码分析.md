@@ -93,7 +93,7 @@ Node<K,V> newNode(int hash, K key, V value, Node<K,V> e) {
 ```
 
 在 HashMap 中，newNode 是在 putVal 方法中调用的。putVal 会在  putMapEntries 或者 put 方法中调用。
-可以看到，在 LinkedHashMap 中，newNode 构建了新的 LinkedHashMapEntry 后，通过 **linkNodeLast **方法**将新节点链接在内部双向链表的尾部。**
+可以看到，在 LinkedHashMap 中，newNode 构建了新的 LinkedHashMapEntry 后，通过 **linkNodeLast**方法**将新节点链接在内部双向链表的尾部。**
 
 ```java
 private void linkNodeLast(LinkedHashMapEntry<K,V> p) {

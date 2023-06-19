@@ -78,10 +78,10 @@ private static class HashtableEntry<K,V> implements Map.Entry<K,V> {
 }
 ```
 
-Hashtable 将每一个节点封装成了 HashtableEntry。里面包含了 hash 值，key，value 以及下一个节点 next。可见 HashtableEntry 跟 HashMap 一样也是一个单链表结构。
-**setValue 方法会判断 value 是否为空，如果空则抛出空指针异常。所以 Hashtable 的 value 值不能为 null。**
+Hashtable 将每一个节点封装成了 HashtableEntry。里面包含了 hash 值，key，value 以及下一个节点 next。可见 HashtableEntry 跟 HashMap 一样也是一个单链表结构。  
+**setValue 方法会判断 value 是否为空，如果空则抛出空指针异常。所以 Hashtable 的 value 值不能为 null。**  
 **hashCode 方法的返回是 hash 值与 value 的 hashCode 的 亦或 操作返回的，这也是跟 HashMap 的一个区别。**
-**
+ 
 # 构造函数
 
 ```java
@@ -176,8 +176,8 @@ public synchronized V put(K key, V value) {
 2. 下标的计算为  **(hash & 0x7FFFFFFF) % tab.length**，hash 值是通过 key 的 hasCode 方法获取的，如果 key 为 null 的话，这里会抛异常，所以** key 和 value 都不能为 null。hash & 0x7FFFFFFF 是为了避免负数。为什么不能用 abs绝对值，因为这里涉及到 int 类型负数最大值问题。可以百度了解一下。**
 3. 根据下标 index 在当前哈希表中获取对应的节点 entry。然后循环遍历链表，如果节点不为空并且找到了，那么就会覆盖新的 value 到旧的 value 上，然后返回旧的 value。找不到则调用 addEntry 方法添加。
 
-    ** 所以，Hashtable 相同 value 也是会覆盖的。**
-**
+ 所以，Hashtable 相同 value 也是会覆盖的。 
+ 
 # addEntry
 
 ```java

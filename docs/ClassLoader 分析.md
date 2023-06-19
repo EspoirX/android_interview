@@ -63,7 +63,7 @@ Android中的ClassLoader类型和Java中的ClassLoader类型类似，也分为�
 - 用户自定义
    - **...**
 
-![image.png](https://cdn.nlark.com/yuque/0/2019/png/450005/1571017825008-45c17f05-2bb2-442b-9e37-e5fdac611eda.png#align=left&display=inline&height=279&originHeight=558&originWidth=1482&size=321581&status=done&width=741)
+![classloader.png](https://s2.loli.net/2023/06/19/xEyzfYXvGMC25qi.png)
 
 运行一个 Android 程序需要用到几种 ClassLoader 类型？
 
@@ -95,16 +95,17 @@ loader = java.lang.BootClassLoader@bb9a922
 2. 另一种则是 **BootClassLoader**。
 
 # ClassLoader的继承关系
-![164028ff45676625.jpg](https://cdn.nlark.com/yuque/0/2019/jpeg/450005/1571022230190-b4d6dc70-9ecd-4f52-8b3b-d59375889933.jpeg#align=left&display=inline&height=633&originHeight=633&originWidth=1009&size=29928&status=done&width=1009)
 
-- **ClassLoader **是一个抽象类，其中定义了ClassLoader的主要功能。
-- **BootClassLoader **是它的内部类，用于**预加载preload()**常用类，加载一些系统Framework层级需要的类，我们的Android应用里也需要用到一些系统的类等
-- **SecureClassLoader **类和JDK8中的SecureClassLoader类的代码是一样的，它继承了抽象类ClassLoader。SecureClassLoader并不是ClassLoader的实现类，而是拓展了ClassLoader类加入了权限方面的功能，加强了ClassLoader的安全性。
-   - **URLClassLoader **类和JDK8中的URLClassLoader类的代码是一样的，它继承自SecureClassLoader，用来通过URl路径从jar文件和文件夹中加载类和资源。**在Android中基本无法使用**
-- **BaseDexClassLoader **继承自ClassLoader，是抽象类ClassLoader的具体实现类，PathClassLoader和DexClassLoader都继承它。
-   - **PathClassLoader **加载系统类和应用程序的类，如果是加载非系统应用程序类，则会加载data/app/目录下的dex文件以及包含dex的apk文件或jar文件
+![classloader1.jpeg](https://s2.loli.net/2023/06/19/Q72TbneiSRfpEv1.png)
+
+- **ClassLoader** 是一个抽象类，其中定义了ClassLoader的主要功能。
+- **BootClassLoader** 是它的内部类，用于**预加载preload()**常用类，加载一些系统Framework层级需要的类，我们的Android应用里也需要用到一些系统的类等
+- **SecureClassLoader** 类和JDK8中的SecureClassLoader类的代码是一样的，它继承了抽象类ClassLoader。SecureClassLoader并不是ClassLoader的实现类，而是拓展了ClassLoader类加入了权限方面的功能，加强了ClassLoader的安全性。
+   - **URLClassLoader** 类和JDK8中的URLClassLoader类的代码是一样的，它继承自SecureClassLoader，用来通过URl路径从jar文件和文件夹中加载类和资源。**在Android中基本无法使用**
+- **BaseDexClassLoader** 继承自ClassLoader，是抽象类ClassLoader的具体实现类，PathClassLoader和DexClassLoader都继承它。
+   - **PathClassLoader** 加载系统类和应用程序的类，如果是加载非系统应用程序类，则会加载data/app/目录下的dex文件以及包含dex的apk文件或jar文件
    - **DexClassLoader** 可以加载自定义的dex文件以及包含dex的apk文件或jar文件，也支持从SD卡进行加载
-   - **InMemoryDexClassLoader **是Android8.0新增的类加载器，继承自BaseDexClassLoader，用于加载内存中的dex文件。
+   - **InMemoryDexClassLoader** 是Android8.0新增的类加载器，继承自BaseDexClassLoader，用于加载内存中的dex文件。
 
 # ClassLoader构造函数
 
@@ -135,7 +136,7 @@ public abstract class ClassLoader {
 ```
 
 可以看到 ClassLoader 有两个构造函数。一个显式传入一个 **父构造器实例**，一个是使用 **默认父类构造器。**
-**
+ 
 而默认的构造器 SystemClassLoader 是 PathClassLoader，而 PathClassLoader 的默认构造器是 BootClassLoader。
 
 # loadClass与双亲委托
@@ -312,7 +313,7 @@ public class BaseDexClassLoader extends ClassLoader {
 BaseDexClassLoader 构造函数有四个参数。PathClassLoader和DexClassLoader都继承自BaseDexClassLoader。
 
 **dexPath**
-指目标类所在的APK或jar文件的路径。类装载器将从该路径中寻找指定的目标类，该类必须是 APK 或 jar 的全路径。
+指目标类所在的APK或jar文件的路径。类装载器将从该路径中寻找指定的目标类，该类必须是 APK 或 jar 的全路径。  
 如果要包含多个路径,路径之间必须使用特定的分割符分隔，特定的分割符可以使用System.getProperty(“path.separtor”) 获得。
 
 **optimizedDirectory**
@@ -326,10 +327,10 @@ optimizedDirectory 是用来缓存我们需要加载的 dex 文件的，并创�
 
 **无论哪种动态加载，ClassLoader 只能加载内部存储路径中的 dex 文件，所以这个路径必须为内部路径。**
 
-**libraryPath**
+**libraryPath**  
 指目标类中所使用的 C/C++ 库存放的路径。
 
-**parent**
+**parent**  
 是指该装载器的父装载器。
 
 # ClassLoader加载class的过程
@@ -342,8 +343,8 @@ BaseDexClassLoader 中有个 pathList 对象，pathList 中包含一个 **DexFi
 
 - dexElements 数组就是 odex 文件的集合
 
-odex 文件是 dexPath 指向的原始 dex(.apk,.zip,.jar等) 文件在 optimizedDirectory 文件夹中生成相应的优化后的文件。
-      如果不分包，一般这个数组只有一个 Element 元素，也就只有一个 DexFile 文件。
+odex 文件是 dexPath 指向的原始 dex(.apk,.zip,.jar等) 文件在 optimizedDirectory 文件夹中生成相应的优化后的文件。  
+如果不分包，一般这个数组只有一个 Element 元素，也就只有一个 DexFile 文件。
 
 对于类加载，就是遍历这个集合，通过 DexFile 去寻找，并最终调用 native 方法的 defineClass。
 
@@ -377,7 +378,7 @@ public Class findClass(String name) {
 }
 ```
 
-调用的是 DexFile 的 loadClassBinaryName 方法。
+调用的是 DexFile 的 loadClassBinaryName 方法。  
 DexFile 源码地址：[https://github.com/EspoirX/android-source/blob/master/DexFile.java](https://github.com/EspoirX/android-source/blob/master/DexFile.java)
 
 ```java

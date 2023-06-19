@@ -15,7 +15,7 @@ Looper.myQueue().addIdleHandler(new IdleHandler() {
 ```
 
 # 1. IdleHandler 作用
-> **IdleHandler 可以用来提升性能，每次消费掉一个有效message，在获取下一个message时，如果当前时刻没有需要消费的有效(需要立刻执行)的message，那么会执行IdleHandler一次，执行完成之后线程进入休眠状态，直到被唤醒，不过最好不要做耗时操作。**
+ **IdleHandler 可以用来提升性能，每次消费掉一个有效message，在获取下一个message时，如果当前时刻没有需要消费的有效(需要立刻执行)的message，那么会执行IdleHandler一次，执行完成之后线程进入休眠状态，直到被唤醒，不过最好不要做耗时操作。**
 
 
 **换句话说，就是当在looper里面的message暂时处理完了，这个时候会回调这个接口。**
@@ -122,38 +122,25 @@ Message next() {
 看到这需求，第一时间可能想到的是在 onStart 或者 onResume 回调里面去做。虽然在这两个方法中，Activity 已经在前台并且可以交互了，但是却并没有绘制完成。一个很明显的例子是你在这两个回调里面获取 View 的宽高时，是获取不到的。那么这时候就可以使用 IdleHandler 了。
 
 
-其他使用场景：
-> 这种特殊的handler可以实现一些很酷的事情，比如，ActivityThread中的GC和非前台Activity的生命周期管理，分别由ActivityThread的GcIdler和Idler实现。
-> **1.GC:**
-AMS会在某些情况下将会调用 scheduleAppGcsLocked，这个方法将会可能会引发 ActivityThread 进行两种场景的GC。一种是低内存，一种是进程运行在后台。> 低内存时会回调进程中的 Activity 的 onLowMemory，然后gc。
-> 
+其他使用场景：  
 
-> 运行在后台时相对没有那么严重，这个时候就使用到 IdleHandler，MessageQueue 闲置后再gc
-> 
+ 这种特殊的handler可以实现一些很酷的事情，比如，ActivityThread中的GC和非前台Activity的生命周期管理，分别由ActivityThread的GcIdler和Idler实现。  
+ **1. GC:**  
+AMS会在某些情况下将会调用 scheduleAppGcsLocked，这个方法将会可能会引发 ActivityThread 进行两种场景的GC。一种是低内存，一种是进程运行在后台。> 低内存时会回调进程中的 Activity 的 onLowMemory，然后gc。  
+运行在后台时相对没有那么严重，这个时候就使用到 IdleHandler，MessageQueue 闲置后再gc  
+注意这里的gc指的都是手动调用 runtime.gc()。  
+基于 ActivityThread 中的 GCWatcher 机制，ActivityThread 能感知到gc    
+不管哪种gc，ActivityThread都能在 gc 的同时选择释放一些 Activity
 
-> 注意这里的gc指的都是手动调用 runtime.gc()。
-> 
+**2.非前台Activity的生命周期管理：**  
+这里指的是  
+1. 对 pause 的 Activity 进行 stop 或 destroy
+2. 对 Finishing 的 Activity 进行 destroy
 
-> 基于 ActivityThread 中的 GCWatcher 机制，ActivityThread 能感知到gc
+例如前者，我们知道启动 Activity 时目标 Activity 的 resume 总是先于前一个 Activity 的 stop  
+ActivitThread 当 resume 完指定的 Activity 后也会进入 idle 状态，  
+因此这时就可以通过 IdleHanler 去调用 AMS 的 activityIdle 方法，  
+activityIdle 会对整个系统进行检查，大多数 stop 和 destroy 操作都由这里引发。  
 
-> 不管哪种gc，ActivityThread都能在 gc 的同时选择释放一些 Activity
-> 
-
-> **2.非前台Activity的生命周期管理：**
-
-> 这里指的是
-
-> 1. 对 pause 的 Activity 进行 stop 或 destroy
-
-> 2. 对 Finishing 的 Activity 进行 destroy
-> 
-
-> 例如前者，我们知道启动 Activity 时目标 Activity 的 resume 总是先于前一个 Activity 的 stop
-ActivitThread 当 resume 完指定的 Activity 后也会进入 idle 状态，
-> 因此这时就可以通过 IdleHanler 去调用 AMS 的 activityIdle 方法，
-
-> activityIdle 会对整个系统进行检查，大多数 stop 和 destroy 操作都由这里引发。
-
-
-> IdleHandler 在业务上也有作用，比如glide中用来在idle的时机清除已经被回收的弱引用，另外我们也可以使用它来在界面绘制完成(注意这个时机晚于onResume)之后做一些操作，比如这篇[文章](https://blog.csdn.net/tencent_bugly/article/details/78395717)中将复杂的界面设置放在绘制完成之后，这样可以先把简单的部分先显示给用户，而不会因为一部分的界面原因导致整个界面长时间处于空白状态
+IdleHandler 在业务上也有作用，比如glide中用来在idle的时机清除已经被回收的弱引用，另外我们也可以使用它来在界面绘制完成(注意这个时机晚于onResume)之后做一些操作，比如这篇[文章](https://blog.csdn.net/tencent_bugly/article/details/78395717)中将复杂的界面设置放在绘制完成之后，这样可以先把简单的部分先显示给用户，而不会因为一部分的界面原因导致整个界面长时间处于空白状态
 

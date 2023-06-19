@@ -16,17 +16,24 @@ LifecycleRegistry 实例，通过 LifecycleRegistry 的 handleLifecycleEvent �
 
 # Event 和 State 的关系
 State 是当前 Lifecycle 的状态值，而 Event 是 Lifecycle 接下去的动作值。
-![16f561d4dad4c0b1.jpg](https://cdn.nlark.com/yuque/0/2020/jpeg/450005/1585796093237-7a40a02a-ca7e-45a4-82b4-2737cefdb2e1.jpeg#align=left&display=inline&height=280&originHeight=280&originWidth=1195&size=13917&status=done&style=none&width=1195)
+
+![lifecycle3.jpeg](https://s2.loli.net/2023/06/19/5LjWmilQoaZpwqC.png)
+
 State 是 中间那行，Event 是上下 ON_ 对应的动作。
 
-![16f563c191e50520.jpg](https://cdn.nlark.com/yuque/0/2020/jpeg/450005/1585796225678-a3589f2f-7c7e-4be3-be8b-a2e2ddb49440.jpeg#align=left&display=inline&height=473&originHeight=473&originWidth=1003&size=26668&status=done&style=none&width=1003)
+![lifecycle4.jpeg](https://s2.loli.net/2023/06/19/EANo6X3bncUVDSi.png)
+
 看到上面这个图片，我们的 onPause 被我们改名字了，改成了 onStart2，当然实际上它跟上面的 onStart 是有区别的，实质上它是 onPause，那我们把名字改了，还能知道吗？？？答案是可以的，为什么？因为有 Event 配合，所以就能知道。
 比如：
 
 比如原来房价为13000一平米，涨了1000，变成了14000，再涨了1000变成了15000，这时候跌了1000，又变回了14000，请问这时候二个14000我可以做区分吗？？？当然可以，配合动作值就可以，因为一个叫做上涨1000的14000， 一个叫跌了1000的14000。
-> ![](https://cdn.nlark.com/yuque/0/2020/webp/450005/1585796554932-0ba14082-ef8c-4cd0-a162-6db0d86d06d0.webp#align=left&display=inline&height=889&originHeight=889&originWidth=1280&size=0&status=done&style=none&width=1280)
+
+![lifecycle5.webp](https://s2.loli.net/2023/06/19/LZ8tVIQGj1w24Pm.webp)
+
 当然为了好看点，上面的房价变化我们可以写成：
-![](https://cdn.nlark.com/yuque/0/2020/webp/450005/1585796554950-b880bbf2-46da-4e06-beb1-2047787f3b42.webp#align=left&display=inline&height=604&originHeight=604&originWidth=1280&size=0&status=done&style=none&width=1280)
+
+![lifecycle6.webp](https://s2.loli.net/2023/06/19/kHGKDirgpsq1bOx.webp)
+
 同理我们的 onPause 虽然名字改成了 onStart, 但是因为是通过 ON_PAUSE 动作值配合，我们知道这时候的onStart 其实是 onPuase，   onStop 更改为 onCreate 也是一样的道理。
 
 # 注册和发送流程
@@ -69,8 +76,8 @@ public void addObserver(@NonNull LifecycleObserver observer) {
 }
 ```
 
-首先获取一下当前的状态 initialState，刚开始 LifecycleObserver 的默认状态是 INITIALIZED，
-        但如果 LifecycleRegistry 的当前状态是 DESTROYED，就业直接把新添加的 LifecycleObserver 也变成 DESTROYED,后续很多逻辑也就走不通了，就好比 Activity 已经变成了 onDestory 了，也不可能在变成其他什么 onCreate，onResume 状态了.
+首先获取一下当前的状态 initialState，刚开始 LifecycleObserver 的默认状态是 INITIALIZED，  
+但如果 LifecycleRegistry 的当前状态是 DESTROYED，就业直接把新添加的 LifecycleObserver 也变成 DESTROYED,后续很多逻辑也就走不通了，就好比 Activity 已经变成了 onDestory 了，也不可能在变成其他什么 onCreate，onResume 状态了.
 
 ObserverWithState 是包装了 LifecycleObserver 和 State 的类。
 
@@ -78,7 +85,7 @@ ObserverWithState 是包装了 LifecycleObserver 和 State 的类。
 
 然后获取目标状态值  targetState
 
-通过 while 把当前的加入的观察者的 State 值，与目标值进行比较（我们当前的值，一开始被赋予了INITIALIZED 或者 DESTROYED）
+通过 while 把当前的加入的观察者的 State 值，与目标值进行比较（我们当前的值，一开始被赋予了INITIALIZED 或者 DESTROYED）  
 在 while 循环里面 通过 pushParentState 方法先把它自身的状态存起来，然后通过 dispatchEvent 方法分发 Event。**参数是根据当前的观察者的状态值的上一步Event（实现一步步提升，一步步分发），**改变观察者的状态后，通过 popParentState 方法原来存的状态给删除掉
 
 最后在重新计算目标状态值 targetState
@@ -116,7 +123,7 @@ private void moveToState(State next) {
 }
 ```
 
-moveToState 会进行一些判断，如果当前的 mState 和要求变化的 state 相同，则不往下执行
+moveToState 会进行一些判断，如果当前的 mState 和要求变化的 state 相同，则不往下执行  
 如果当前正在进行 sync 同步，或者同时添加了多个观察者，不往下执行，否则进行 sync 更新队列。
 
 ### sync()
@@ -148,7 +155,7 @@ private void sync() {
 通过 while 循环，判断条件是是否完成同步，根据当前状态和 mObserverMap 中的 eldest 和 newest 的状态做对比 ，判断当前状态是向前还是向后，比如由 **STARTED** 到 **RESUMED** 是**状态向前**，反过来就是状态向后。
 
 **后退操作**是从**队列头开始，往队列尾更新，向前操作相反**
-**
+ 
 backwardPass 和 forwardPass 方法中调用 ObserverWithState 的 dispatchEvent 方法进行事件分发。
 
 ```java
@@ -170,7 +177,7 @@ static class ObserverWithState {
 }
 ```
 
-这里调用了我们封装的 ObserverWithState 对象里面的 **mLifecycleObserver 的 onStateChanged 方 法**，而这个 mLifecycleObserver 是把我们 addObserver 时候传入的我们自己的 Observer 通过 Lifecycling.getCallback 方法再次处理后返回了一个新的 Observer。说明我们**传入的不同的 Observer，返回的这个回调的mLifecycleObserver 不同。**
+这里调用了我们封装的 ObserverWithState 对象里面的 **mLifecycleObserver 的 onStateChanged 方 法**，而这个 mLifecycleObserver 是把我们 addObserver 时候传入的我们自己的 Observer 通过 Lifecycling.  getCallback 方法再次处理后返回了一个新的 Observer。说明我们**传入的不同的 Observer，返回的这个回调的mLifecycleObserver 不同。**
 
 事件通过这里分发出去了。
 

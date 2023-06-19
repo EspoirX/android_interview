@@ -36,8 +36,8 @@ public static void install(Context context) {
 
 在 install 方法中，判断如果虚拟机本身就支持加载多个dex文件，那么什么都不用做，然后获取到 ApplicationInfo。
 
-ApplocationInfo 是应用信息，sourceDir 是**已经安装的 APK 的全路径** ，dataDir 的路径是  **/data/user/0/${packageName}/ **
-**
+ApplocationInfo 是应用信息，sourceDir 是**已经安装的 APK 的全路径** ，dataDir 的路径是  **/data/user/0/${packageName}/**
+ 
 最后执行 doInstallation 方法。
 
 # doInstallation
@@ -258,9 +258,9 @@ private List<MultiDexExtractor.ExtractedDex> performExtractions() throws IOExcep
 8. 最中返回 files，里面存储的是存储了 dex 的 zip 文件。
 
 整个过程就是 **解压apk，遍历出里面的 dex 文件，例如 class1.dex，class2.dex，然后又压缩成 class1.zip，class2.zip...，然后返回zip文件列表。**
-**
+ 
 **获取到 files 后会通过 putStoredApkInfo 方法缓存到 sp 文件中，而 loadExistingExtractions 方法的实现就是从 sp 文件中读取缓存。**
-**
+ 
 # installSecondaryDexes
 获取到 flies 列表后回到 doInstallation 方法执行下一步的 installSecondaryDexes 方法，执行安装 dex 操作。
 
@@ -357,10 +357,11 @@ private static void expandFieldArray(Object instance, String fieldName, Object[]
 
 就是创建一个新的数组，把原来数组内容（主dex）和要增加的内容（dex2、dex3...）拷贝进去，反射替换原来的dexElements 为新的数组，如下图
 
-![16da4e5aaceaef08.jpg](https://cdn.nlark.com/yuque/0/2019/jpeg/450005/1571109411439-94818974-2ba1-4274-9e23-f3595ecccb1f.jpeg#align=left&display=inline&height=242&originHeight=197&originWidth=600&size=8003&status=done&width=737)
+![multidex.jpeg](https://s2.loli.net/2023/06/19/HGkgWE7Xq29BJwi.png)
+
 总结来说：
 
-5.0 以下这个 **dexElements** 里面只有主 dex（可以认为是一个bug），没有dex2、dex3...，MultiDex 是怎么把dex2添加进去呢?
+5.0 以下这个 **dexElements** 里面只有主 dex（可以认为是一个bug），没有dex2、dex3...，MultiDex 是怎么把dex2添加进去呢?  
 答案就是反射 **DexPathList** 的 **dexElements** 字段，然后把我们的 dex2 添加进去，当然，**dexElements** 里面放的是 **Element** 对象，我们只有 dex2 的**路径**，必须转换成 Element 格式才行，所以反射DexPathList 里面的 **makeDexElements** 方法，将 dex 文件转换成 Element 对象即可。
 
 **DexPathList#makeDexElements**
@@ -402,7 +403,7 @@ private static Element[] makeDexElements(ArrayList<File> files,
 }
 ```
  
-> **makeDexElements 方法会判断 file 类型，上面讲 dex 提取的时候解压 apk 得到dex，然后又将 dex 压缩成 zip，压缩成 zip，就会走到第二个判断里去。仔细想想，其实 dex 不压缩成 zip，走第一个判断也没啥问题吧，那谷歌的MultiDex 为什么要将 dex 压缩成 zip 呢？**
+> **makeDexElements 方法会判断 file 类型，上面讲 dex 提取的时候解压 apk 得到dex，然后又将 dex 压缩成 zip，压缩成 zip，就会走到第二个判断里去。仔细想想，其实 dex 不压缩成 zip，走第一个判断也没啥问题吧，那谷歌的MultiDex 为什么要将 dex 压缩成 zip 呢？**  
 > **在Android开发高手课中看到张绍文也提到这一点**
 
-![16da4e5b007e3860.jpg](https://cdn.nlark.com/yuque/0/2019/jpeg/450005/1571110241745-ca1ab1ac-ae9c-4a9b-8fd6-f3f567a104cb.jpeg#align=left&display=inline&height=255&originHeight=210&originWidth=600&size=6128&status=done&width=730)
+![multidex1.jpeg](https://s2.loli.net/2023/06/19/SHVIEJB94OYuZaM.webp)

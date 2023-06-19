@@ -116,7 +116,7 @@ public HashMap(Map<? extends K, ? extends V> m) {
 HasMap 有四个构造函数。
 
 1. 先看无参构造函数 **HasMap()，**在这个构造函数中给一个变量赋值，**loadFactor** 的意思是**加载因子**，它的默认值 **DEFAULT_LOAD_FACTOR 为 0.75f。加载因子的作用是用于计算哈希表元素数量的阈值。  threshold = 哈希桶.length * loadFactor;**
-2. 两个参数的构造函数 **HashMap(int initialCapacity, float loadFactor)， **initialCapacity 为初始化容量，**MAXIMUM_CAPACITY** 的默认值是 **1<<30，即2的30次方。**在这个构造函数中，首先进行边界处理，如果指定的初始化容量大于最大值，则为最大值，loadFactor 加载因子也不能为负数。最后再通过 tableSizeFor 方法计算出 **阈值 threshold，即哈希桶长度。**
+2. 两个参数的构造函数 **HashMap(int initialCapacity, float loadFactor)，**initialCapacity 为初始化容量，**MAXIMUM_CAPACITY** 的默认值是 **1<<30，即2的30次方。**在这个构造函数中，首先进行边界处理，如果指定的初始化容量大于最大值，则为最大值，loadFactor 加载因子也不能为负数。最后再通过 tableSizeFor 方法计算出 **阈值 threshold，即哈希桶长度。**
 
 ```java
 static final int tableSizeFor(int cap) {
@@ -135,7 +135,7 @@ static final int tableSizeFor(int cap) {
 这里采用了位运算，目的是提高效率，tableSizeFor 会根据期望容量 cap，返回 **2 的 n 次方形式的** 哈希桶的实际容量 length。 返回值一般会 >=cap。
 
 3. 构造函数 **HashMap(int initialCapacity)** 为指定初始化容量的构造函数。
-4. 构造函数 **HashMap(Map<? extends K, ? extends V> m)**的作用是新建一个哈希表，同时将另一个 map m 里的所有元素加入表中。
+4. 构造函数 **HashMap(Map<? extends K, ? extends V> m)** 的作用是新建一个哈希表，同时将另一个 map m 里的所有元素加入表中。
 
 # putMapEntries
 看下最后一个构造函数中的 putMapEntries 方法。

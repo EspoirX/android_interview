@@ -82,16 +82,18 @@ public final class ArrayMap<K, V> implements Map<K, V> {
 }
 ```
 
-可以看到，ArrayMap 的实现是基于 2 个数组的：
-一个 **int[] 数组 mHashes**，用于保存每个 item 的 hashCode.
-一个 **Object[ ]数组 mArray**，保存 key/value 键值对。容量是上一个数组的两倍。
-![arrayMap.jpg](https://cdn.nlark.com/yuque/0/2019/jpeg/450005/1572315403900-c5c3a084-b889-4410-9fc9-7134327f6465.jpeg#align=left&display=inline&height=314&originHeight=314&originWidth=955&size=26786&status=done&width=955)
-并且为了减少频繁地创建和回收 Map 对象，ArrayMap 有缓存机制，分别缓存大小是 4 和 8 的 Map 对象。
+可以看到，ArrayMap 的实现是基于 2 个数组的：  
+一个 **int[] 数组 mHashes**，用于保存每个 item 的 hashCode.  
+一个 **Object[ ]数组 mArray**，保存 key/value 键值对。容量是上一个数组的两倍。  
+
+![arraymap.jpeg](https://s2.loli.net/2023/06/19/Xfk6ODgsCMx9l7I.jpg)
+
+并且为了减少频繁地创建和回收 Map 对象，ArrayMap 有缓存机制，分别缓存大小是 4 和 8 的 Map 对象。  
 其中 mSize 记录着该 ArrayMap 对象中有多少对数据，执行 put() 或者 append() 操作，则 mSize 会加 1，执行remove()，则 mSize 会减 1。mSize 往往小于 mHashes.length，如果 mSize 大于或等于 mHashes.length，则说明 mHashes 和 mArray 需要扩容。
 
-在两个参数的构造函数中，先判断初始化容量：
-如果小于 0，则给 mHashes 和 mArray 创建一个不可变的空ArrayMap；
-如果等于 0，构建空的 mHashes mArray；
+在两个参数的构造函数中，先判断初始化容量：  
+如果小于 0，则给 mHashes 和 mArray 创建一个不可变的空ArrayMap；  
+如果等于 0，构建空的 mHashes mArray；  
 如果大于 0，则调用 allocArrays 进行分配空间初始化数组（扩容） ，mSize 初始化为 0。
 
 # allocArrays
@@ -182,7 +184,7 @@ private static void freeArrays(final int[] hashes, final Object[] array, final i
 }
 ```
 
-在 freeArrays 释放内存时，如果同时满足释放的 array 大小等于 4 或者 8，且相对应的缓冲池个数未达上限，则会把该 array 加入到缓存池中。
+在 freeArrays 释放内存时，如果同时满足释放的 array 大小等于 4 或者 8，且相对应的缓冲池个数未达上限，则会把该 array 加入到缓存池中。  
 加入的方式是将数组 array 的第 0 个元素指向原有的缓存池，第 1 个元素指向 hashes 数组的地址，第 2 个元素以后的数据全部置为 null。再把缓存池的头部指向最新的 array 的位置，并将该缓存池大小执行加 1 操作。
 
 # put
@@ -334,8 +336,7 @@ static int binarySearch(int[] array, int size, int value) {
     return ~lo;  // value not present
 }
 ```
-# 
-# 
+  
 # putAll
 
 ```java
@@ -362,7 +363,7 @@ public void putAll(ArrayMap<? extends K, ? extends V> array) {
 putAll 方法首先会调用 ensureCapacity 方法确保当前空间容量足够大，然后判断当前 ArrayMap 是否有值，如果是空的话，比如第一次使用，就直接复制 array 到当前 ArrayMap 中，否则调用 put 方法逐个添加。
 
 **ensureCapacity**
-**
+ 
 ```java
 public void ensureCapacity(int minimumCapacity) {
     final int osize = mSize;
@@ -506,8 +507,8 @@ public V removeAt(int index) {
 }
 ```
 
-remove() 过程：
-通过二分查找 key 的 index，再根据 index 来选择移除动作；
+remove() 过程：  
+通过二分查找 key 的 index，再根据 index 来选择移除动作；  
 当被移除的是 ArrayMap 的最后一个元素，则释放该内存，否则只做移除操作，这时会根据容量收紧原则来决定是否要收紧，当需要收紧时会创建一个更小内存的容量。
 
 # clear

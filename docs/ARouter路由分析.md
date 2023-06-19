@@ -212,7 +212,7 @@ public synchronized static void init(Context context, ThreadPoolExecutor tpe) th
 
 在 init 方法中，首先通过指定包名 com.alibaba.android.arouter.routes（ROUTE_ROOT_PAKCAGE）找到所有编译期生成的 routes 目录下的类名，保存在 routerMap 下，然后再保存在 sp 文件中。然后再通过判断分别调用生成的类的 loadInto 接口方法，注意传入的参数是在 Warehouse 下的 map，这些 map 是静态保存的。Warehouse 称为内存仓库。
 
-![image.png](https://cdn.nlark.com/yuque/0/2019/png/450005/1569741871919-3e44f286-b6b5-4c36-b40f-f7f926ee204d.png#align=left&display=inline&height=142&originHeight=284&originWidth=810&size=140832&status=done&width=405)
+![aroutes.png](https://s2.loli.net/2023/06/19/17L2IYPBJ5pQjbT.png)
 
 简单来说，初始化就是找到如图上面那些类，并调用里面的 loadInto 方法存储信息到内容仓库中，其中 内存仓库Warehouse缓存了全局应用的【组别的清单列表】、【Ioc的动作路由清单列表】、【模块内的拦截器清单列表】，3个以 _index 为结尾的 Map 对象。
 
@@ -416,10 +416,10 @@ public synchronized static void completion(Postcard postcard) {
 
 代码比较长，注意分为两部分，就是 if 和 else 两部分。
 
-第一部分，if 部分：
+第一部分，if 部分：  
 首先根据 postcard 的信息在内存仓库中查找路径信息 RouteMeta，如果找不到，则在内存仓库中查找分组信息 groupMeta。可以看到，分组信息不能为 null。找到后调用分组信息的 loadInto 方法，并存在内存仓库中，这样就有 RouteMeta 信息了，然后再移除分组信息。准备好后再次调用自己，这样就会走 else 逻辑了。
 
-第二部分 else：
+第二部分 else：  
 拿到 RouteMeta 后，根据 RouteMeta 信息去完善 Postcard。
 
 # navigation()
@@ -605,7 +605,7 @@ private void startActivity(int requestCode, Context currentContext, Intent inten
 }
 ```
 
-可以看到，如果类型是 Activity，最终会调用 ActivityCompat.startActivity 方法去启动 Activity。
-Fragment 的话，会通过 newInstance 去实例化，并调用 setArguments 参数传值。
-如果是 Ioc，会调用 getProvider 返回 IProvider 实例。
+可以看到，如果类型是 Activity，最终会调用 ActivityCompat.startActivity 方法去启动 Activity。  
+Fragment 的话，会通过 newInstance 去实例化，并调用 setArguments 参数传值。  
+如果是 Ioc，会调用 getProvider 返回 IProvider 实例。  
 如果是 Boardcast 或者是 ConentProvider，可以看到他们的case 中没有 break，所以他们的逻辑也是跟 Fragment 一样。

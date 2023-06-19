@@ -40,10 +40,10 @@ public LruCache(int maxSize) {
 }
 ```
 
-在构造函数中，需要指定缓存最大值大小。
-**注释中的 maxSize 定义**：对于不重写 **sizeOf** 方法的缓存，这是缓存中的最大条目数。 对于所有其他缓存，这是此缓存中条目大小的最大和。
+在构造函数中，需要指定缓存最大值大小。  
+**注释中的 maxSize 定义**：对于不重写 **sizeOf** 方法的缓存，这是缓存中的最大条目数。 对于所有其他缓存，这是此缓存中条目大小的最大和。  
 接下来初始化了 LinkedHashMap，传入初始的哈希桶大小为 0，加载因子 0.75，accessOrder 为 true。对于 accessOrder 为 true，通过 LinkedHashMap 的分析知道，访问的时候，输出的顺序是**按照访问节点的顺序。**
-**
+ 
 **比如：**比如原始 Map 中值的顺序是 ABCD，这时查找 AB，那么 LinkedHashMap 重新排序顺序为 CDAB，最后查找的排在 list 尾部，这样等容量超过 LruCache 初始化的最大值 maxSize 时，就可以从 list 头开始删除。
 
 # Size 操作
@@ -66,7 +66,7 @@ protected int sizeOf(K key, V value) {
 }
 ```
 
-safeSizeOf 里面调用了 sizeOf 方法，sizeOf 我们往往需要重写它，默认大小是 1，它的定义是：
+safeSizeOf 里面调用了 sizeOf 方法，sizeOf 我们往往需要重写它，默认大小是 1，它的定义是：  
 返回 **以用户定义的单位返回 key-value 条目的大小，默认实现返回 1，因此 size 是条目数，max size 是最大条目数。条目在缓存中时，其大小不得更改。**
 
 默认情况下，缓存大小以条目数衡量。 覆写 sizeOf 方法以不同的单位调整缓存大小。 例如，此缓存限于位图的4MiB：
