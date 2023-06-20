@@ -104,7 +104,7 @@ setFocusableInTouchMode(true);
 这两个都是 View 的属性配置。
 第一个方法是**设置该组件是否作为可滚动容器使用，设为 true 后，展开软键盘 View 会被压缩。**
 第二个方法是**设置该组件在触摸模式下是否可以得到焦点。**
-**
+
 **第三段：**
 
 ```java
@@ -131,6 +131,5 @@ ViewConfiguration，熟悉自定义 View 的都会知道。
 6. setWillNotDraw ViewGroup 是否执行 onDraw 方法，默认情况下，出于性能考虑，会被设置成WILL_NOT_DROW，这样，onDraw 就不会被执行了。如果我们想重写一个viewgroup的ondraw方法，有两种方法：1.构造函数中，给viewgroup设置一个颜色。2.构造函数中，调用setWillNotDraw（false），去掉其WILL_NOT_DRAW flag。这里的意思是 如果用户过度滚动此视图，就不执行 onDraw 方法。
 7. 最后一行为 RecycleView.ItemAnimator 设置监听器，ItemAnimator 默认实现是 DefaultItemAnimator。
 
-其他代码也是一些配置，其中有一个方法** createLayoutManager，它的作用是如果在 xml 里面设置了 LayoutManager ，就会通过反射去创建并设置它。**
-**
-**
+其他代码也是一些配置，其中有一个方法**createLayoutManager，它的作用是如果在 xml 里面设置了 LayoutManager ，就会通过反射去创建并设置它。**
+
