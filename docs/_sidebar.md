@@ -34,6 +34,7 @@
   - [LruCache 源码解析](LruCache%20源码解析.md) 
   - [ArrayMap源码解析](ArrayMap源码解析.md) 
   - [SparseArray源码解析](SparseArray源码解析.md) 
+  - [ArrayList](ArrayList.md)
 
 - Android 单元测试
   - [Android 单元测试](Android%20单元测试.md)
